@@ -1,1 +1,0 @@
-# abtal-alriyadiyat
