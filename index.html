@@ -1,0 +1,128 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>أبطال الرياضيات مع وليد - القسمة 1</title>
+<style>
+body{font-family:Arial,sans-serif;background:#F5F8FC;margin:0}
+.container{max-width:800px;margin:20px auto;background:#fff;padding:20px;border-radius:16px;box-shadow:0 2px 10px rgba(0,0,0,.1)}
+h1{text-align:center;color:#1565C0}
+input,button{padding:12px;border-radius:10px}
+input{width:100%;border:1px solid #ccc}
+button{background:#1565C0;color:#fff;border:none;cursor:pointer}
+.avatars{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:10px 0}
+.avatar{padding:8px 12px;border:2px solid #ddd;border-radius:10px;cursor:pointer}
+.selected{border-color:#1565C0;background:#eef5ff}
+.hidden{display:none}
+.option{display:block;margin:8px 0;padding:10px;border:1px solid #ddd;border-radius:8px;cursor:pointer}
+</style>
+</head>
+<body>
+
+<div class="container" id="home">
+<h1>🏆📖➗ أبطال الرياضيات مع وليد</h1>
+<p>إشراف الأستاذ وليد الشهري</p>
+<input id="studentName" placeholder="اكتب اسمك الكامل">
+<div class="avatars">
+<div class="avatar" onclick="pick(this,'🦁')">🦁 أسد</div>
+<div class="avatar" onclick="pick(this,'🦅')">🦅 صقر</div>
+<div class="avatar" onclick="pick(this,'🐎')">🐎 فارس</div>
+<div class="avatar" onclick="pick(this,'🚀')">🚀 رائد فضاء</div>
+<div class="avatar" onclick="pick(this,'🧠')">🧠 عبقري</div>
+</div>
+<button onclick="start()">ابدأ رحلتك</button>
+</div>
+
+<div class="container hidden" id="dashboard">
+<h2 id="welcome"></h2>
+<p>📚 اختبار القسمة (1) - 10 أسئلة تجريبية</p>
+<button onclick="beginQuiz()">ابدأ الاختبار</button>
+</div>
+
+<div class="container hidden" id="quiz">
+<h3 id="progress"></h3>
+<p id="question"></p>
+<div id="options"></div>
+<button onclick="submitAnswer()">تأكيد الإجابة</button>
+<p id="feedback"></p>
+</div>
+
+<div class="container hidden" id="result">
+<h2>🎉 انتهى الاختبار</h2>
+<p id="score"></p>
+<button onclick="location.reload()">إعادة المحاولة</button>
+</div>
+
+<script>
+let avatar='';
+let selected=null;
+let current=0;
+let score=0;
+
+const questions=[
+{q:"12 ÷ 3 = ؟",o:["2","3","4","5"],a:"4",e:"لأن 3 × 4 = 12"},
+{q:"20 ÷ 5 = ؟",o:["2","3","4","5"],a:"4",e:"لأن 5 × 4 = 20"},
+{q:"18 ÷ 2 = ؟",o:["7","8","9","10"],a:"9",e:"لأن 2 × 9 = 18"},
+{q:"30 ÷ 10 = ؟",o:["2","3","4","5"],a:"3",e:"لأن 10 × 3 = 30"},
+{q:"24 ÷ 4 = ؟",o:["4","5","6","7"],a:"6",e:"لأن 4 × 6 = 24"},
+{q:"15 ÷ 3 = ؟",o:["3","4","5","6"],a:"5",e:"لأن 3 × 5 = 15"},
+{q:"14 ÷ 2 = ؟",o:["6","7","8","9"],a:"7",e:"لأن 2 × 7 = 14"},
+{q:"25 ÷ 5 = ؟",o:["4","5","6","7"],a:"5",e:"لأن 5 × 5 = 25"},
+{q:"0 ÷ 5 = ؟",o:["0","1","5","غير ممكن"],a:"0",e:"الصفر مقسوماً على أي عدد يساوي صفراً"},
+{q:"12 ÷ 1 = ؟",o:["0","1","11","12"],a:"12",e:"أي عدد يقسم على 1 يبقى كما هو"}
+];
+
+function pick(el,a){
+document.querySelectorAll('.avatar').forEach(x=>x.classList.remove('selected'));
+el.classList.add('selected');
+avatar=a;
+}
+function start(){
+const n=document.getElementById('studentName').value.trim();
+if(!n){alert('اكتب اسمك');return;}
+document.getElementById('home').classList.add('hidden');
+document.getElementById('dashboard').classList.remove('hidden');
+document.getElementById('welcome').innerText='مرحباً '+n+' '+avatar;
+}
+function beginQuiz(){
+document.getElementById('dashboard').classList.add('hidden');
+document.getElementById('quiz').classList.remove('hidden');
+showQuestion();
+}
+function showQuestion(){
+selected=null;
+document.getElementById('feedback').innerHTML='';
+let q=questions[current];
+document.getElementById('progress').innerText='السؤال '+(current+1)+' من '+questions.length;
+document.getElementById('question').innerText=q.q;
+let html='';
+q.o.forEach(op=>{
+html+=`<div class="option" onclick="selected='${op}'">${op}</div>`;
+});
+document.getElementById('options').innerHTML=html;
+}
+function submitAnswer(){
+if(!selected){alert('اختر إجابة');return;}
+let q=questions[current];
+if(selected===q.a){
+score++;
+document.getElementById('feedback').innerHTML='✅ أحسنت';
+}else{
+document.getElementById('feedback').innerHTML='❌ '+q.e;
+}
+setTimeout(()=>{
+current++;
+if(current<questions.length){showQuestion();}
+else{
+document.getElementById('quiz').classList.add('hidden');
+document.getElementById('result').classList.remove('hidden');
+let pct=Math.round(score/questions.length*100);
+document.getElementById('score').innerText=`درجتك: ${score}/${questions.length} - النسبة ${pct}%`;
+}
+},1200);
+}
+</script>
+</body>
+</html>
