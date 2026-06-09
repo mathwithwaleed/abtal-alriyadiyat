@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>أبطال الرياضيات مع وليد</title>
+<style>
+body{font-family:Arial;background:#f4f7fb;margin:0;padding:15px}
+.box{max-width:850px;margin:auto;background:#fff;padding:20px;border-radius:15px}
+h1{text-align:center;color:#1565C0}
+input,button{padding:12px;border-radius:10px}
+input{width:100%;margin-bottom:10px}
+button{background:#1565C0;color:#fff;border:none}
+.hidden{display:none}
+.opt{border:1px solid #ccc;padding:10px;margin:8px 0;border-radius:8px;cursor:pointer}
+.sel{background:#e8f1ff;border-color:#1565C0}
+.bar{height:18px;background:#ddd;border-radius:10px;overflow:hidden}
+.fill{height:100%;background:#1565C0;width:0%}
+</style>
+</head>
+<body>
+<div class="box" id="home">
+<h1>🏆 أبطال الرياضيات مع وليد</h1>
+<p>إشراف الأستاذ وليد الشهري</p>
+<input id="name" placeholder="اكتب اسمك الكامل">
+<button onclick="start()">ابدأ التحدي</button>
+</div>
+
+<div class="box hidden" id="quiz">
+<h3 id="prog"></h3>
+<div class="bar"><div class="fill" id="fill"></div></div>
+<h2 id="q"></h2>
+<div id="opts"></div>
+<p id="fb"></p>
+<button onclick="nextQ()">التالي</button>
+</div>
+
+<div class="box hidden" id="result">
+<h2>النتيجة النهائية</h2>
+<p id="res"></p>
+<p id="medal"></p>
+<button onclick="location.reload()">إعادة المحاولة</button>
+</div>
+
+<script>
+const qs=[
+["البسط في 3/5 ؟",["3","5","8","2"],0],
+["المقام في 3/5 ؟",["3","5","8","2"],1],
+["الأكبر؟",["1/4","1/2","متساويان","لا شيء"],1],
+["للمربع كم ضلع؟",["3","4","5","6"],1],
+["للمثلث كم ضلع؟",["2","3","4","5"],1],
+["الخماسي له",["4","5","6","7"],1],
+["السداسي له",["4","5","6","7"],2],
+["المكعب له أوجه",["4","5","6","8"],2],
+["المكعب له رؤوس",["6","8","10","12"],1],
+["الكرة لها",["أوجه","لا أوجه","6 أوجه","4 أوجه"],1],
+["وحدة طول القلم",["كم","م","سم","لتر"],2],
+["المسافة بين المدن",["سم","م","كم","مل"],2],
+["سعة زجاجة ماء",["لتر","كم","سم","جم"],0],
+["ساعة واحدة =",["30","50","60","70"],2],
+["الرقم 6 في الدقائق",["20","25","30","35"],2],
+["المحيط هو",["جمع الأضلاع","الضرب","القسمة","الطرح"],0],
+["المساحة هي",["عدد المربعات","الأضلاع","الرؤوس","الأحرف"],0],
+["اختيار أحمر من كيس كله أحمر",["مستحيل","مؤكد","أقل احتمال","متساو"],1],
+["التمثيل بالأعمدة يستخدم",["للبيانات","للجمع","للطرح","للرسم"],0],
+["مفتاح التمثيل يوضح",["القيمة","اللون","الاسم","الشكل"],0],
+["1/2 = ؟/4",["1","2","3","4"],1],
+["عدد محاور تماثل المربع",["1","2","3","4"],3],
+["أيها مجسم؟",["مربع","مثلث","مكعب","دائرة"],2],
+["وحدة الكتلة",["كجم","لتر","سم","كم"],0],
+["3×4 =",["7","12","9","10"],1],
+["12÷3 =",["4","3","5","6"],0],
+["20÷5 =",["4","2","5","6"],0],
+["ترتيب بيانات الطلاب يسمى",["تمثيل بياني","مساحة","محيط","كسر"],0],
+["الشكل ذو 5 زوايا",["رباعي","خماسي","سداسي","مثلث"],1],
+["عدد أسئلة هذا الاختبار",["20","25","30","35"],2]
+];
+let i=0,s=0,sel=null;
+function start(){document.getElementById('home').classList.add('hidden');document.getElementById('quiz').classList.remove('hidden');show();}
+function show(){
+sel=null;fb.innerHTML='';
+prog.innerHTML='السؤال '+(i+1)+' من '+qs.length;
+fill.style.width=((i)/qs.length*100)+'%';
+q.innerHTML=qs[i][0];
+opts.innerHTML='';
+qs[i][1].forEach((o,n)=>{
+let d=document.createElement('div');
+d.className='opt';
+d.innerText=o;
+d.onclick=()=>{document.querySelectorAll('.opt').forEach(x=>x.classList.remove('sel'));d.classList.add('sel');sel=n;}
+opts.appendChild(d);
+});
+}
+function nextQ(){
+if(sel===null){alert('اختر إجابة');return;}
+if(sel===qs[i][2]){s++;fb.innerHTML='✅ أحسنت';}
+else{fb.innerHTML='❌ الإجابة الصحيحة: '+qs[i][1][qs[i][2]];}
+setTimeout(()=>{
+i++;
+if(i<qs.length)show();
+else finish();
+},700);
+}
+function finish(){
+quiz.classList.add('hidden');
+result.classList.remove('hidden');
+let p=Math.round(s/qs.length*100);
+res.innerHTML='درجتك '+s+' من '+qs.length+'<br>النسبة '+p+'%';
+let m='🚀 واصل التدريب';
+if(s>=27)m='🥇 بطل المركزي';
+else if(s>=24)m='🦁 أسد الرياضيات';
+else if(s>=21)m='🦅 صقر الرياضيات';
+else if(s>=18)m='🐎 فارس الرياضيات';
+medal.innerHTML=m;
+}
+</script>
+</body>
+</html>
