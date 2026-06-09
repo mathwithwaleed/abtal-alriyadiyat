@@ -1,0 +1,73 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>أبطال الرياضيات مع وليد</title>
+<style>
+body{margin:0;font-family:'Tahoma',sans-serif;background:linear-gradient(#f6e7b5,#e7c66a)}
+.wrap{max-width:900px;margin:auto;padding:20px}
+.card{background:#fff8e8;border-radius:25px;padding:25px;box-shadow:0 10px 25px rgba(0,0,0,.15)}
+h1{text-align:center;color:#7a4a00}
+button{background:#8b5200;color:#fff;border:none;border-radius:14px;padding:14px 20px;font-size:20px}
+.opt{display:block;width:100%;margin:10px 0;padding:14px;border:2px solid #e4d3a0;border-radius:12px;background:#fff}
+.bar{height:18px;background:#ddd;border-radius:20px}.fill{height:100%;width:0;background:#8b5200}
+</style>
+</head>
+<body>
+<div class="wrap"><div class="card">
+<div id="home">
+<h1>🏆 أبطال الرياضيات مع وليد</h1>
+<p style="text-align:center">مراجعة مركزة للاختبار المركزي</p>
+<input id="name" placeholder="اسم الطالب" style="width:100%;padding:12px">
+<br><br><center><button onclick="start()">ابدأ التحدي</button></center>
+</div>
+<div id="quiz" style="display:none">
+<h2 id="counter"></h2>
+<div class="bar"><div id="fill" class="fill"></div></div>
+<h2 id="q"></h2>
+<div id="opts"></div>
+</div>
+<div id="result" style="display:none;text-align:center">
+<h1>النتيجة</h1><h2 id="score"></h2>
+<button onclick="location.reload()">إعادة</button>
+</div>
+</div></div>
+<script>
+const qs=[
+["البسط في ٣/٥ ؟",["٣","٥","٨","٢"],0],
+["المقام في ٣/٥ ؟",["٣","٥","٨","٢"],1],
+["للمربع كم ضلع؟",["٣","٤","٥","٦"],1],
+["للمثلث كم ضلع؟",["٣","٤","٥","٦"],0],
+["للمكعب كم وجه؟",["٦","٨","١٢","١٠"],0],
+["المجسم الذي ليس له أوجه؟",["كرة","مكعب","هرم","أسطوانة"],0],
+["وحدة قياس طول القلم؟",["سم","لتر","كجم","مل"],0],
+["وحدة قياس سعة الماء؟",["م","كجم","لتر","سم"],2],
+["عدد زوايا الشكل الخماسي؟",["٤","٥","٦","٧"],1],
+["أيها أكبر كتلة؟",["فرشاة","تفاحة","طاولة الصف","كتاب"],2],
+["كم دقيقة في الساعة؟",["٣٠","٦٠","٩٠","١٢٠"],1],
+["ناتج ٤×٥ ؟",["١٥","٢٠","٢٥","٣٠"],1],
+["الكرة لها رؤوس؟",["نعم","لا"],1],
+["وحدة السعة المترية؟",["مل","م","سم","كجم"],0],
+["عدد أوجه متوازي المستطيلات؟",["٦","٨","١٠","١٢"],0]
+];
+let i=0,s=0;
+function start(){home.style.display='none';quiz.style.display='block';show();}
+function show(){
+counter.innerText='السؤال '+(i+1).toLocaleString('ar')+' من '+qs.length.toLocaleString('ar');
+fill.style.width=(i/qs.length*100)+'%';
+q.innerText=qs[i][0];
+opts.innerHTML='';
+qs[i][1].forEach((x,n)=>opts.innerHTML+=`<button class="opt" onclick="ans(${n})">${x}</button>`);
+}
+function ans(n){
+if(n===qs[i][2])s++;
+i++;
+if(i>=qs.length){
+quiz.style.display='none';result.style.display='block';
+score.innerText='درجتك '+Math.round(s/qs.length*100).toLocaleString('ar')+'٪';
+}else show();
+}
+</script>
+</body></html>
